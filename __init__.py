@@ -1,0 +1,1 @@
+from .diaggpt.main import DiagGPT

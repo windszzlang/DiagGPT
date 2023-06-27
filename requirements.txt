@@ -1,0 +1,7 @@
+openai
+langchain
+opensearch-py
+nltk
+tiktoken
+google-search-results
+beautifulsoup4
