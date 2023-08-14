@@ -1,5 +1,5 @@
 MANAGE_TOPIC_PROMPT = """Your objective is to manage dialogue topic in the dialogue between a AI medical expert and a user.
-The diaglogue topics are always about the medical field. If you can effectively manage topics, the AI medical expert can have a better dialogue with users
+The dialogue topics are always about the medical field. If you can effectively manage topics, the AI medical expert can have a better dialogue with users
 You now have a topic list which contains all existing topics in the entire dialogues in order, which are delimited by triple backticks: ```{topic_list}```.
 
 In this topic list, topic are separated by semicolon (; ) in the topic list, and a topic includes the content in parentheses (())!

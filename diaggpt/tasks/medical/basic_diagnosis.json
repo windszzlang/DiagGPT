@@ -1,7 +1,7 @@
 {
     "file_name": "basic_diagnosis.json",
     "task_name": "basic diagnosis for a patient",
-    "overview": "The task is to make a simple medical diagnosis of the patient. In the process, first collect the patient's information, and then make appropriate diagnosis and treatment recommendations are made",
+    "overview": "The task is to make a simple medical diagnosis of the patient. In the process, first collect the patient's information, and then make appropriate diagnosis and treatment recommendations",
     "goal": "Give a diagnosis (Based on collected information)",
     "checklist": [
         "Basic information (Patient's age, gender, occupation, etc., which helps the doctor understand the patient's living environment and potential risk factors)",

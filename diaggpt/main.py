@@ -199,7 +199,7 @@ class DiagGPT():
         name='Load Topics From a Predefined Task',
         description='useful when you think the user starts a predefined task (a complex topics group).'
                     'All predefined task includs: (separated by comma): ' + ', '.join(predefined_tasks.keys()) +
-                    'A predefined task contains a group diaglogue topics we define for you, you should distinguish it from topics which are already in topic list'
+                    'A predefined task contains a group dialogue topics we define for you, you should distinguish it from topics which are already in topic list'
                     'The input to this tool should be a string representing the name of a predefined task, which must be from (separated by comma): ' + ', '.join(predefined_tasks.keys()) +
                     'You can just use this tool once.'
     )

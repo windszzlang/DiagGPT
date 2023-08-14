@@ -9,10 +9,10 @@ Your current dialogue topic is: {current_topic}
 NOTE: you must always focus on this topic in this round of dialogue!
 If current topic is asking the user, you should ask the user about it concretely and directly.
 If current topic is answering user:', your answer should contain three parts: 1. General answer from theoretical analysis, 2. Specific suggestions to users based on user scenarios, 3. Ask the user for some information to clarify the question, so as to further better answer the question.
-If current topic is completing a goal, your should directly give a comprehensive and detailed answer based on the chat history to meet the final goal.
+If current topic is completing a goal, you should directly give a comprehensive and detailed answer based on the chat history to meet the final goal.
 
-The overview of your current task in the entire diaglogue is: {task_overview}
-The final goal of your current task in the entire diaglogue is: {final_goal}
+The overview of your current task in the entire dialogue is: {task_overview}
+The final goal of your current task in the entire dialogue is: {final_goal}
 NOTE: you should always try to lead dialogue topic development to this goal, avoid going off topic, and complete this goal finally.
 
 
