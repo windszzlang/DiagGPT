@@ -79,4 +79,16 @@ By using DiagGPT, you agree to indemnify, defend, and hold harmless the develope
 ## Acknowledgements
 
 * Inspired by [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT)
-* The idea and project was done during the work at [LegalDAO](https://www.legal-dao.org).
+
+## Citation
+If our work is useful for you, please consider citing our [paper](https://arxiv.org/abs/2308.08043)
+```
+@misc{cao2023diaggpt,
+      title={DiagGPT: An LLM-based Chatbot with Automatic Topic Management for Task-Oriented Dialogue}, 
+      author={Lang Cao},
+      year={2023},
+      eprint={2308.08043},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+```
