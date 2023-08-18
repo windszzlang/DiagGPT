@@ -1,5 +1,5 @@
 openai
-langchain
+langchain==0.0.247
 opensearch-py
 nltk
 tiktoken
