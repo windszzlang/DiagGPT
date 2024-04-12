@@ -1,0 +1,52 @@
+{
+    "chat_history": [
+        {
+            "user": "Hi, I come here to do order food. Can you help me with this task?",
+            "system": "Of course! I'd be happy to help you with your food order. What would you like to order?"
+        },
+        {
+            "user": "I would like to order a Margherita pizza with extra cheese and a side of garlic bread. Also, I would like a Caesar salad and a glass of red wine.",
+            "system": "Great! Let's start with the menu selection. We have Margherita pizza with extra cheese, garlic bread, Caesar salad, and red wine. How many Margherita pizzas would you like to order?"
+        },
+        {
+            "user": "I would like to order one Margherita pizza.",
+            "system": "Great! How many Margherita pizzas with extra cheese would you like to order?"
+        },
+        {
+            "user": "I would like to order one Margherita pizza with extra cheese.",
+            "system": "Great! How many side of garlic bread would you like to order?"
+        },
+        {
+            "user": "I would like to order one side of garlic bread.",
+            "system": "Great! How many Caesar salads would you like to order?"
+        },
+        {
+            "user": "I would like to order one Caesar salad.",
+            "system": "Great! How many glasses of red wine would you like to order?"
+        },
+        {
+            "user": "I would like to order one glass of red wine.",
+            "system": "Great! How many glasses of red wine would you like to order?"
+        },
+        {
+            "user": "I would like to order one glass of red wine.",
+            "system": "Great! Could you please provide me with the restaurant address for the delivery?"
+        },
+        {
+            "user": "Sure, the restaurant address is 123 Main Street, New York, NY 10001.",
+            "system": "Thank you for providing the restaurant address. Now, could you please let me know if you would like to have the food delivered or if you will be picking it up yourself?"
+        },
+        {
+            "user": "I would like to have the food delivered to my home address.",
+            "system": "Great! Could you please provide me with your home address for the delivery?"
+        },
+        {
+            "user": "Sure, my home address is 456 Park Avenue, New York, NY 10022.",
+            "system": "Thank you for providing your home address. Now, could you please let me know if you have any special dietary requests or preferences for your order?"
+        },
+        {
+            "user": "",
+            "system": ""
+        }
+    ]
+}

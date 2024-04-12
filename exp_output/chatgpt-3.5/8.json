@@ -1,0 +1,20 @@
+{
+    "chat_history": [
+        {
+            "user": "Hi, I come here to do flight information. Can you help me with this task?",
+            "system": "Of course! I'd be happy to help you with your flight information. Could you please provide me with the flight number?"
+        },
+        {
+            "user": "Sure, my flight number is BA 287.",
+            "system": "Thank you for providing the flight number. Let me check the details for you. Please wait a moment."
+        },
+        {
+            "user": "Okay, I'll wait. Thank you for your help.",
+            "system": "Thank you for your patience. I have checked the details for your flight BA 287. Here is the information I found:\n\n- Departure time: 10:30 AM\n- Arrival time: 4:45 PM\n- Gate number: B12\n- Flight status: On time\n- Baggage claim details: Baggage claim area 3\n- Security checkpoint wait times: Currently, the wait time at the security checkpoint is approximately 15 minutes.\n\nIs there anything else I can assist you with?"
+        },
+        {
+            "user": "No, that's all I need. Thank you for providing me with the flight information. I appreciate your help.",
+            "system": "You're welcome! I'm glad I could assist you with your flight information. If you have any other questions in the future, feel free to ask. Have a great day and safe travels! I'm glad to serve you, byebye!"
+        }
+    ]
+}

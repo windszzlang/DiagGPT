@@ -1,47 +1,62 @@
-# DiagGPT: Dialogue in Diagnosis
+# DiagGPT
 
-* Better Chatbot with Automatic Topic Management in Diagnosis Scenarios
+* **Dia**lo**g**ue in **Diag**nosis GPT
+* Better Chatbot with Automatic Topic Management in Diverse and Complex Diagnosis Scenarios
+* Code and data repo for "DiagGPT"
+* Paper: "[DiagGPT: An LLM-based and Multi-agent Dialogue System with Automatic Topic Management for Flexible Task-Oriented Dialogue](https://arxiv.org/abs/2308.08043)"
+
+
 
 ## Introduction
 
-**DiagGPT** (**Diag**logue in **Diag**nosis model Based on **GPT**-4) is an experimental open-source application showcasing the capabilities of the GPT-4 language model. This project is developed to better simulate the professional consultation process of users and experts in the field of expertise.
+<img src="figures/diaggpt.png" width="50%" height="50%">
 
-General AI or large language models (LLM) in dialogue scenarios such as ChatGPT, by supplementing their background knowledge, providing context and appropriate Prompt, have been able to form strong question-answering models for specialized fields. However, for legal, medical, etc. special professional consultation scenarios, the AI model needs to take into account the user's own situation or information. Then the AI model conduct targeted analysis and question-answering. In the process of obtaining user information, the interactive experience of the AI model is also crucial. We need a consultation process that better simulates real docters (medical experts), lawyers (legal experts) etc. A single traditional LLM can no longer meet the needs, it can only meet the linear interaction, can not well complete the above dialogue logic. 
-
-**DiagGPT** can meet this need to better engage in professional consultation conversations with users. **DiagGPT** features include:
-1. Take a certain user requirement as the core task
-2. Load a predefined task framework to guide user and conduct professional consultations
-3. Make solving the user's current problem the top priority 
-4. Determine whether the user's current problem is relevant to the task being performed, and guide it 
-6. If a new problem occurs when the user is solving the current problem, a new topic needs to be enabled 
-7. After the current problem is resolved, close the current topic and return to the previous topic or the preloaded topic
-8. To be supplemented... 
-
-In detail, we use a agent (another LLM) to manage topic in the entire dialogue. The manage actions of topic manager are similar to tools in AutoGPT.
+Large Language Models (LLMs), such as ChatGPT, are increasingly sophisticated and exhibit capabilities closely resembling those of humans. A significant application of these LLMs is their use as chat agents, responding to human inquiries across various domains. While current LLMs proficiently answer general questions, they often fall short in complex diagnostic scenarios such as legal, medical, or other specialized consultations. These scenarios typically require Task-Oriented Dialogue (TOD), where an AI chat agent must proactively pose questions and guide users toward specific goals or task completion. Previous fine-tuning models have underperformed in TOD and the full potential of conversational capability in current LLMs has not yet been fully explored. In this paper, we introduce DiagGPT (Dialogue in Diagnosis GPT), an innovative approach that extends LLMs to more TOD scenarios. In addition to guiding users to complete tasks, DiagGPT can effectively manage the status of all topics throughout the dialogue development. This feature enhances user experience and offers a more flexible interaction in TOD. Our experiments demonstrate that DiagGPT exhibits outstanding performance in conducting TOD with users, showing its potential for practical applications in various fields.
 
 ## Quick Start
 
-```shell
-pip install -r requirements.txt
-touch openai_api_key.txt # put your openai api key in it
-
-python demo.py
-```
-
-* You can improve any prompt or modify it to meet your needs.
-* You can define your own predefined tasks.
-* You can use vector database in Langchain to enrich model background knowledge in some fields. (Some code is already included.)
-* Project structure:
+### Project Structure
 
 ```shell
 .
-├── diaggpt
-│   ├── embedding/   # file store, retrieval, etc.
-│   ├── tasks/       # task template and predefined tasks
-│   ├── prompts/     # all prompts in DiagGPT
-│   └── main.py      # main code of DiagGPT
+├── chatgpt                  # implementation of base chatgpt
+├── data
+│   └── LLM-TOD              # LLM-TOD dataset
+├── demo.py                  # DiagGPT for demo test
+├── diaggpt                  # simple version of DiagGPT for quantitative experiments
+├── diaggpt_medical          # full version of DiagGPT in the medical consulting scenario
+│   ├── embedding            # file store, retrieval, etc.
+│   ├── main.py              # main code of implementation
+│   ├── prompts              # all prompts in DiagGPT
+│   ...
+├── evalgpt                  # implementation of GPT evaluation
+├── exp.py                   # code of quantitative experiments
+├── exp_output               # experiment results
+├── openai_api_key.txt       # openai key
+├── requirements.txt         # dependencies
+├── usergpt                  # simulation of the user for quantitative experiments
 ...
 ```
+
+### Dependencies
+
+* Python 3.10.9
+* `pip install -r requirements.txt`
+
+### Run
+
+```shell
+touch openai_api_key.txt   # put your openai api key in it
+
+python demo.py             # demo test
+
+python exp.py              # run quantitative experiments
+```
+
+* You need to improve any prompt or modify it to meet your needs and different base LLM.
+* You can define your own predefined tasks.
+* You can use vector database in Langchain to enrich model background knowledge in some fields. (Some code is already included.)
+
 
 ## Demo
 
@@ -55,28 +70,16 @@ At present, the existing functions of the project are very preliminary. It is on
 
 The primary objective of this experiment is to demonstrate the potential of GPT-4, however, it is important to note that this is not a fully polished application or product, but rather an experimental project. It is possible that GPT-4 may not perform optimally in complex, real-world business scenarios. We encourage you to improve upon it and apply it in various scenarios, and we would be delighted to hear about your results!
 
-## Disclaimer
 
-DiagGPT is an experimental application that is provided "as-is" without any warranty, express or implied. By using this software, you assume all risks associated with its use, including but not limited to data loss, system failure, or any other issues that may arise.
-
-The developers and contributors of DiagGPT do not accept any responsibility or liability for any losses, damages, or other consequences that may occur as a result of using this software. You are solely responsible for any decisions and actions taken based on the information provided by DiagGPT.
-
-Please note that the use of the GPT-4 language model can be expensive due to its token usage. By using this software, you acknowledge that you are responsible for monitoring and managing your own token usage and the associated costs. We highly recommend that you regularly check your OpenAI API usage and set up any necessary limits or alerts to prevent unexpected charges.
-
-As an autonomous experiment, DiagGPT may generate content that are not in line with real-world business practices or legal requirements. It is your responsibility to ensure that any actions or decisions made based on the output of this software comply with all applicable laws, regulations, and ethical standards. The developers and contributors of DiagGPT shall not be held responsible for any consequences arising from the use of this software.
-
-By using DiagGPT, you agree to indemnify, defend, and hold harmless the developers, contributors, and any affiliated parties from and against any and all claims, damages, losses, liabilities, costs, and expenses (including reasonable attorneys' fees) arising from your use of this software or your violation of these terms.
-
-## Future Development of This Project
-
-* Improve topic manager to better control dialogue topic jump and creation
-* Improve topic manager to better manage previous dialogue topic
-* Load Predefined subtasks
-* Add more examples, including legal scenarios
-* Project Paper
-* ...... (we will continue to improve it)
-
-## Acknowledgements
-
-* Inspired by [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT)
-* The idea and project was done during the work at [LegalDAO](https://www.legal-dao.org).
+## Cite us
+If you find this repo useful, please cite the following paper:
+```
+@misc{cao2023diaggpt,
+      title={DiagGPT: An LLM-based and Multi-agent Dialogue System with Automatic Topic Management for Flexible Task-Oriented Dialogue}, 
+      author={Lang Cao},
+      year={2023},
+      eprint={2308.08043},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+```

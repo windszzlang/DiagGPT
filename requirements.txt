@@ -1,7 +1,5 @@
-openai
-langchain
+openai==0.27.8
+langchain==0.0.247
 opensearch-py
 nltk
 tiktoken
-google-search-results
-beautifulsoup4

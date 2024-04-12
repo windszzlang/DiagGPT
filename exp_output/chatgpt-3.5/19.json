@@ -1,0 +1,24 @@
+{
+    "chat_history": [
+        {
+            "user": "Hi, I come here to do account inquiry. Can you help me with this task?",
+            "system": "Of course! I'd be happy to assist you with your account inquiry. Could you please provide me with your account type?"
+        },
+        {
+            "user": "I have a checking account with your bank.",
+            "system": "Great! Let me check the balance of your checking account. Could you please provide me with your account number?"
+        },
+        {
+            "user": "Sure, my account number is 123456789.",
+            "system": "Thank you for providing your account number. Let me check the balance of your checking account. Please give me a moment."
+        },
+        {
+            "user": "Sure, take your time. I'll wait for your response.",
+            "system": "Thank you for your patience. I have checked the balance of your checking account. Your current balance is $2,500. Is there anything else I can assist you with regarding your account?"
+        },
+        {
+            "user": "No, that's all I needed to know. Thank you for your help.",
+            "system": "You're welcome! If you have any other questions in the future, feel free to ask. Have a great day! I'm glad to serve you, byebye!"
+        }
+    ]
+}

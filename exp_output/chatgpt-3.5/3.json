@@ -1,0 +1,36 @@
+{
+    "chat_history": [
+        {
+            "user": "Hi, I come here to do schedule an appointment. Can you help me with this task?",
+            "system": "Of course! I'd be happy to help you schedule an appointment. Could you please provide me with some more information?"
+        },
+        {
+            "user": "Sure, I would like to schedule an appointment with Dr. Smith, who is my primary care physician. I am available on weekdays, preferably in the morning. I would like to schedule it for the next available slot.",
+            "system": "Thank you for providing the information. Before we proceed, could you please provide me with your full name and contact details?"
+        },
+        {
+            "user": "My full name is John Doe and my contact number is 123-456-7890.",
+            "system": "Thank you for providing your full name and contact number, John Doe. Now, let's move on to the next step. Could you please let me know the reason for your visit?"
+        },
+        {
+            "user": "I have been experiencing persistent headaches for the past few weeks. I would like to discuss this with Dr. Smith and get a check-up.",
+            "system": "Thank you for letting me know, John Doe. I will schedule an appointment for you with Dr. Smith to discuss your persistent headaches. Before we proceed, could you please let me know your preferred date and time for the appointment?"
+        },
+        {
+            "user": "I would prefer to have the appointment on any weekday next week, preferably in the morning around 10 AM. However, I am flexible and can adjust to the doctor's availability.",
+            "system": "Thank you for providing your preferred date and time, John Doe. Let me check Dr. Smith's availability for next week. Please wait a moment."
+        },
+        {
+            "user": "Sure, I will wait. Thank you for your assistance.",
+            "system": "You're welcome! I appreciate your patience. I have checked Dr. Smith's availability for next week, and I have a few options for you. \n\nHere are the available appointment times for next week:\n\n1. Monday at 10:00 AM\n2. Tuesday at 9:30 AM\n3. Wednesday at 11:00 AM\n4. Thursday at 10:30 AM\n5. Friday at 9:00 AM\n\nPlease let me know which option works best for you, or if you have any other preferences."
+        },
+        {
+            "user": "The Tuesday at 9:30 AM slot works best for me. Please schedule the appointment for that time. Thank you.",
+            "system": "Great! I have scheduled your appointment with Dr. Smith for Tuesday at 9:30 AM. Is there anything else I can assist you with?"
+        },
+        {
+            "user": "No, that's all for now. I appreciate your help in scheduling the appointment. Thank you.",
+            "system": "You're welcome! I'm glad I could assist you in scheduling the appointment. If you have any other questions or need further assistance, feel free to ask. Have a great day! I'm glad to serve you, byebye!"
+        }
+    ]
+}

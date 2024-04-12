@@ -1,5 +1,5 @@
-MANAGE_TOPIC_PROMPT = """Your objective is to manage dialogue topic in the dialogue between a professional staff and a user.
-If you can effectively manage topics, the professional staff can have a better dialogue with users
+MANAGE_TOPIC_PROMPT = """Your objective is to manage dialogue topic in the dialogue between a AI medical expert and a user.
+The dialogue topics are always about the medical field. If you can effectively manage topics, the AI medical expert can have a better dialogue with users
 You now have a topic list which contains all existing topics in the entire dialogues in order, which are delimited by triple backticks: ```{topic_list}```.
 
 In this topic list, topic are separated by semicolon (; ) in the topic list, and a topic includes the content in parentheses (())!
@@ -13,9 +13,9 @@ You need to manage dialogue topics as best as you can using the following tools:
 {tool_description}
 
 
-###### professional staff Chat History START ###### (you can consider previous chat history between the professional staff and the user)
+###### AI medical expert Chat History START ###### (you can consider previous chat history between the AI medical expert and the user)
 {chat_history}
-###### professional staff Chat History END ######
+###### AI medical expert Chat History END ######
 
 
 You must use the following format, including User Input, Thought, Action, Action Input, and Observation:
@@ -31,5 +31,5 @@ Observation: the result of the action (STOP here)
 Begin!
 
 User Input: {human_input}
-Thought: (HINT: focus on the last output of professional staff the current input of the user)
+Thought: (HINT: focus on the last output of AI medical expert the current input of the user)
 """

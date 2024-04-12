@@ -1,32 +1,38 @@
-import openai
+import os
+import logging
 import re
-import json
+from queue import Queue
+from typing import List, Dict, Tuple
+# import openai
 
 from langchain import LLMChain, PromptTemplate
 from langchain.chat_models import ChatOpenAI
+from langchain.callbacks.base import BaseCallbackHandler
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+from langchain.docstore.document import Document
 from langchain.memory import ConversationSummaryBufferMemory, ReadOnlySharedMemory
 from langchain.prompts.chat import ChatPromptTemplate, SystemMessagePromptTemplate
 
-from diaggpt.prompts import CHAT_PROMPT_TEMPLATE, ENRICH_TOPIC_PROMPT, MANAGE_TOPIC_PROMPT
+from opensearchpy import NotFoundError
+
+from .embedding.embeder import Embedder
+from .prompts import CHAT_PROMPT_TEMPLATE, ENRICH_TOPIC_PROMPT, MANAGE_TOPIC_PROMPT, USER_INTRO, AI_INTRO
+from .tasks import load_predefined_tasks
+
+
+logging.basicConfig(level=getattr(logging, os.environ.get('LOG_LEVEL', 'INFO')))
 
 
 
-def load_predefined_tasks(data_path):
-    tasks = {}
-    task_list = []
-    with open(data_path) as f:
-        for line in f.readlines():
-            task_list.append(json.loads(line))
+class StreamingQueueCallbackHandler(BaseCallbackHandler):
+    def __init__(self):
+        self.q = Queue(10)
 
-    for task in task_list:
-        # D['topic'], D['task_name'], D['overview'], D['goal'], D['checklist']
-        task['goal'] = task['goal'].replace("'", '')
-        task['checklist'] = [c.replace("'", '') for c in task['checklist']]
-        tasks[task['task_name']] = task
-        # process, remove '
+    def on_llm_new_token(self, token: str, **kwargs) -> None:
+        self.q.put(token)
 
-    return tasks
-
+    def on_llm_end(self, response, **kwargs) -> None:
+        self.q.put(None)
 
 def tool(name, description):
     def decorator(func):
@@ -38,23 +44,34 @@ def tool(name, description):
 
 class DiagGPT():
 
-    predefined_tasks = load_predefined_tasks('data/LLM-TOD/data.jsonl')
+    predefined_tasks = load_predefined_tasks()
 
-    def __init__(self, model_name='gpt-4-0613'):
-        self.model_name = model_name
-        self.memory_model_name = 'gpt-4-0613' # 'gpt-3.5-turbo-0613'
+    def __init__(self, embedder: Embedder=None):
+        """Initializes the MainQAChain.
+
+        Args:
+            embedder: An instance of Embedder. Should be the general background knowledge.
+        """
+        self.background_embedder = embedder
+        streaming_callback = StreamingQueueCallbackHandler()
+        # if streaming_callbacks is None:
+            # streaming_callbacks = [StreamingStdOutCallbackHandler()]
+        self.streaming_buffer = streaming_callback.q
+        
+        self.gpt4 = 'gpt-4' # 'gpt-4-0613'
+        # gpt4 is slow and summary will block other process
+        self.gpt3 = 'gpt-3.5-turbo' # 'gpt-3.5-turbo-0613'
 
         self.topic_stack = []
-        self.tool_list = [
-                        #   self.stay_at_the_current_topic,
-                        #   self.create_a_new_topic,
+        self.tool_list = [self.stay_at_the_current_topic,
+                          self.create_a_new_topic,
                           self.finish_the_current_topic,
-                        #   self.finish_the_current_topic_and_create_a_new_topic_together,
-                        #   self.finish_the_current_topic_and_jump_to_an_existing_topic_together,
-                        #   self.jump_to_an_existing_topic,
+                          self.finish_the_current_topic_and_create_a_new_topic_together,
+                          self.finish_the_current_topic_and_jump_to_an_existing_topic_together,
+                          self.jump_to_an_existing_topic,
                           self.load_topics_from_a_predefined_task]
 
-        self.chat_model = self._init_chat_model()
+        self.chat_model = self._init_chat_model([streaming_callback])
         self.topic_enricher = self._init_topic_enricher(self.chat_model.memory)
         self.topic_manage_agent = self._init_topic_manage_agent(self.chat_model.memory)
 
@@ -68,8 +85,17 @@ class DiagGPT():
 
         self.init_topics()
 
-    def _init_chat_model(self):
-        llm = ChatOpenAI(model_name=self.model_name, streaming=True, temperature=0)
+    def _init_chat_model(self, callbacks) -> LLMChain:
+        """Initializes the chat model.
+
+        Args:
+            callbacks: A list of async callback handlers.
+
+        Returns:
+            The chat model.
+        """
+        llm = ChatOpenAI(model_name=self.gpt4, streaming=True, callbacks=callbacks,
+                          temperature=0)
         template = CHAT_PROMPT_TEMPLATE
 
         system_message_prompt = SystemMessagePromptTemplate.from_template(template)
@@ -78,21 +104,21 @@ class DiagGPT():
                                                  memory_key="chat_history",
                                                  return_messages=True,
                                                  human_prefix='User',
-                                                 ai_prefix='AI',
-                                                 llm=ChatOpenAI(temperature=0, model_name=self.memory_model_name))
-        # memory.save_context({'human_input': USER_INTRO}, {'output': AI_INTRO})
+                                                 ai_prefix='AI (Medical Expert)', # Legal or Medical
+                                                 llm=ChatOpenAI(temperature=0, model_name=self.gpt3))
+        memory.save_context({'human_input': USER_INTRO}, {'output': AI_INTRO})
         
         chat_model = LLMChain(llm=llm, prompt=chat_prompt, memory=memory)
         return chat_model
 
     def _init_topic_enricher(self, memory) -> LLMChain:
-        llm = ChatOpenAI(model_name=self.model_name, temperature=0)
+        llm = ChatOpenAI(model_name=self.gpt4, temperature=0)
         prompt = PromptTemplate(input_variables=['original_topic', 'chat_history'], template=ENRICH_TOPIC_PROMPT)
         chain = LLMChain(llm=llm, prompt=prompt, memory=ReadOnlySharedMemory(memory=memory))
         return chain
     
     def _init_topic_manage_agent(self, memory) -> LLMChain:
-        llm = ChatOpenAI(model_name=self.model_name, temperature=0)
+        llm = ChatOpenAI(model_name=self.gpt4, temperature=0)
         prompt = PromptTemplate(input_variables=['topic_list', 'current_topic', 'tool_description', 'tool_names', 'human_input', 'chat_history'], template=MANAGE_TOPIC_PROMPT)
         chain = LLMChain(llm=llm, prompt=prompt, memory=ReadOnlySharedMemory(memory=memory))
         return chain
@@ -121,8 +147,7 @@ class DiagGPT():
         name='Finish the Current Topic',
         description='useful when you think the user has already known about the answer of current topic and wants to finish the current topic,'
                     'or the user has already answered the question you ask in the current topic.'
-                    'or the user does not want to talk more about the current topic and wants to finish it.'
-                    'Use this tool as much as possible to advance the conversation and achieve the goal.'
+                    'or the user does not want to talk more about the current topic and wants to finish it'
                     'This tool does not have any input.'
     )
     def finish_the_current_topic(self):
@@ -174,9 +199,7 @@ class DiagGPT():
                     'All predefined task includs: (separated by comma): ' + ', '.join(predefined_tasks.keys()) +
                     'A predefined task contains a group dialogue topics we define for you, you should distinguish it from topics which are already in topic list'
                     'The input to this tool should be a string representing the name of a predefined task, which must be from (separated by comma): ' + ', '.join(predefined_tasks.keys()) +
-                    'You can only use this tool once.'
-                    'You can only use this tool once.'
-                    'You can only use this tool once.'
+                    'You can just use this tool once.'
     )
     def load_topics_from_a_predefined_task(self, task_name: str):
         self.current_task = self.predefined_tasks[task_name]
@@ -196,7 +219,7 @@ class DiagGPT():
         return ", ".join([tool.name for tool in self.tool_list])
 
     @property
-    def tool_by_names(self):
+    def tool_by_names(self) -> Dict:
         return {tool.name: tool for tool in self.tool_list}
     
     @property
@@ -207,43 +230,55 @@ class DiagGPT():
         new_topic = self.topic_enricher.predict(original_topic=original_topic)
         return new_topic
     
-    def run_chat(self, query: str):
-        # current_topic = self.topic_stack[-1]
-        current_topic = self.enrich_topic(self.topic_stack[-1])
-        # print('<Current topic>: ' + self.topic_stack[-1])
-        print('<Current topic>: ' + current_topic)
+    def chat(self, query: str, user_embedder: Embedder=None) -> Tuple[str, List[Document]]:
+        """Asks a question and gets the answer.
 
-        if self.topic_stack[-1].startswith('Complete goal:'):
-            termination = """You should include "I'm glad to serve you, byebye!" in your response.
-You should include "I'm glad to serve you, byebye!" in your response.
-You should include "I'm glad to serve you, byebye!" in your response.
-"""
-        else:
-            termination = ""
+        Args:
+            query: The question to ask.
+            user_embedder: An instance of Embedder. Should be the background information specific to the user.
+
+        Returns:
+            A tuple containing the answer and a list of related documents.
+        """
+        current_topic = self.enrich_topic(self.topic_stack[-1])
+        # print('<Current topic>: ' + current_topic)
+
+        try:
+            if self.background_embedder:
+                background_documents = self.background_embedder.search(query, top_k=4)
+            else:
+                background_documents = []
+        except NotFoundError as e:
+            background_documents = []
+        background_context = '\n===\n'.join(i.page_content for i in background_documents)
+
+        try:
+            if user_embedder:
+                user_documents = user_embedder.search(query, top_k=4)
+            else:
+                user_documents = []
+        except NotFoundError as e:
+            user_documents = []
+        user_context = '\n===\n'.join(i.page_content for i in user_documents)    
 
         result = self.chat_model.predict(human_input=query,
-                                         current_topic=self.topic_stack[-1], # simple topic
-                                         current_task=current_topic, # detailed topic
-                                         # task info
-                                         topic=self.current_task['topic'],
-                                         task_name=self.current_task['task_name'],
+                                         current_topic=current_topic,
                                          task_overview=self.current_task['overview'],
                                          final_goal=self.current_task['goal'],
-                                         termination=termination)
-        return result
+                                         background_context=background_context,
+                                         user_context=user_context)
+        return result, background_context, user_context
+
 
     def init_topics(self):
         # topics = load_saft_topics()
         # self.topic_stack.extend(topics)
         self.topic_stack.append(self.beginning_topic)
         self.current_task = {
-            "topic": None,
-            "task_name": None,
-            "overview": None,
-            "goal": None,
-            "checklist": []
+            'overview': None,
+            'goal': None,
+            'checklist': []
         }
-
 
     def parse_agent_output(self, agent_output: str):
         # print('######\n<Agent output>:')
@@ -282,17 +317,15 @@ You should include "I'm glad to serve you, byebye!" in your response.
             new_topic_stack.append(topic_name)
         self.topic_stack = new_topic_stack
         
-    # def run(self, query: str):
-    def chat(self, query: str):
+
+    def run(self, query: str, user_embedder: Embedder=None):
         # print('##########')
         # print('<Stack status 1>: ' + self.topic_list)
         # print('##########')
         self.run_agent(query)
-        print('##########')
-        print('<Stack status 2>: ' + '; '.join(self.topic_stack))
-        print('##########')
-        output_message = self.run_chat(query)
+        # print('##########')
+        # print('<Stack status 2>:' + '; '.join(self.topic_stack))
+        # print('##########')
+        self.chat(query, user_embedder)
         self.remove_redundant_topics(3)
-        
-        return output_message
     

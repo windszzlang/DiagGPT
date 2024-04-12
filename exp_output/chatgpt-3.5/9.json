@@ -1,0 +1,32 @@
+{
+    "chat_history": [
+        {
+            "user": "Hi, I come here to do drink order. Can you help me with this task?",
+            "system": "Of course! I'd be happy to help you with your drink order. Could you please provide me with some more information?"
+        },
+        {
+            "user": "Sure, I'd like to order a glass of red wine, preferably a Cabernet Sauvignon. I also want a pint of lager beer. I'm not sure about the brands you have, so I'd appreciate your suggestions.",
+            "system": "Thank you for your order. Could you please let me know how many glasses of red wine and pints of lager beer you would like?"
+        },
+        {
+            "user": "I would like to have two glasses of red wine and one pint of lager beer.",
+            "system": "Thank you for your order. Could you please let me know if you have any special requests for your drinks?"
+        },
+        {
+            "user": "No, I don't have any special requests for my drinks. I just want them served at the right temperature. The red wine should be served at room temperature and the lager beer should be served cold.",
+            "system": "Thank you for letting me know. We will make sure to serve your drinks at the right temperature. The red wine will be served at room temperature and the lager beer will be served cold. \n\nNow, could you please let me know your preferred payment method?"
+        },
+        {
+            "user": "I prefer to pay by credit card. It's a Visa card.",
+            "system": "Thank you for letting me know. We accept credit card payments, including Visa. Now, could you please let me know your table number?"
+        },
+        {
+            "user": "My table number is 7.",
+            "system": "Thank you for letting me know. Your table number is 7. \n\nNow, could you please let me know the expected wait time for your drinks?"
+        },
+        {
+            "user": "I'm not sure about the exact wait time, but I hope my drinks can be served within 15 minutes.",
+            "system": "Thank you for letting me know. We will do our best to serve your drinks within 15 minutes. \n\nI'm glad to serve you, byebye!"
+        }
+    ]
+}
