@@ -10,7 +10,7 @@ TOD_CRITERIA = """Criteria of response_quality:
 """
 
 GRADING_PROMPT_TEMPLATE = """You need to act as an impartial judge and evaluate the quality of a dialogue between a user and a system. Be as objective as possible.
-I will provide you the chat history, the evaluation metric, and the evaluaation reference.
+I will provide you the chat history, the evaluation metric, and the evaluation reference.
 
 This dialogue is task-oriented dialogue. In this dialogue, the user and the system needs to achieve a goal and complete a task.
 The dialogue needs to go through the entire checklist and then achieve the final goal.
@@ -48,7 +48,7 @@ Your response of evaluation in JSON: """
 
 
 COMPARISON_PROMPT_TEMPLATE = """You need to act as an impartial judge and evaluate the quality of two dialogue between a user and a system. Be as objective as possible.
-I will provide you two chat history, the evaluation metric, and the evaluaation reference.
+I will provide you two chat history, the evaluation metric, and the evaluation reference.
 
 This dialogue is task-oriented dialogue. In this dialogue, the user and the system needs to achieve a goal and complete a task.
 The dialogue needs to go through the entire checklist and then achieve the final goal.
@@ -57,7 +57,7 @@ Topic of dialogue: {topic}
 Task which should be completed in this dialogue: {task_name}
 Overview of this task: {overview}
 Final goal of the task or the dialogue: {goal}
-All items in the task checklist: {checklist}
+All items in the task checklist: {checklist} (divided by comma)
 
 
 #### Dialogue A Start ####
